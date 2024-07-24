@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TaskCreate from "./task-create";
 import { Button } from "./ui/button";
 
-const TodoList = () => {
+const TaskList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const tasks = useSelector((state: RootState) => state.tasks);
   const tasksData = tasks.tasks;
@@ -84,4 +84,4 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default TaskList;

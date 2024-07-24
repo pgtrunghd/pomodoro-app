@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import "./App.css";
 import TaskCreate from "./components/task-create";
-import TodoList from "./components/todo-list";
+import TaskList from "./components/task-list";
 import Timer from "./components/timer";
 import { Progress } from "./components/ui/progress";
 
@@ -16,7 +16,7 @@ function App() {
 
         <Timer />
 
-        <TodoList />
+        <TaskList />
 
         {openCreate ? (
           <TaskCreate onClose={() => setOpenCreate(false)} />
