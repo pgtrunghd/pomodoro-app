@@ -4,20 +4,18 @@ import "./App.css";
 import TaskCreate from "./components/task-create";
 import TaskList from "./components/task-list";
 import Timer from "./components/timer";
-import { Progress } from "./components/ui/progress";
 
 function App() {
   const [openCreate, setOpenCreate] = useState(false);
 
   return (
-    <main className=" h-screen py-10">
+    <main className="min-h-screen py-10">
       <section className="container max-w-screen-sm h-full">
         {/* <Progress /> */}
-
         <Timer />
 
         <TaskList />
-
+        
         {openCreate ? (
           <TaskCreate onClose={() => setOpenCreate(false)} />
         ) : (

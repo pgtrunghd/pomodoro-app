@@ -7,7 +7,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import useOutsideClick from "@/hooks/use-outside-click";
 
 type Props = {
   onClose: () => void;
@@ -26,6 +27,9 @@ const TaskCreate = ({ onClose, task }: Props) => {
       name: "",
     },
   });
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOutsideClick(ref, () => onClose());
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     const { name } = values;
@@ -44,7 +48,7 @@ const TaskCreate = ({ onClose, task }: Props) => {
   }, [task]);
 
   return (
-    <div className="bg-white p-5 rounded-md">
+    <div className="bg-white p-5 rounded-md" ref={ref}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

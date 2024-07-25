@@ -1,15 +1,18 @@
 import { deleteTask, fetchTasks, updateTask } from "@/features/tasksSlice";
 import { cn } from "@/lib/utils";
 import { AppDispatch, RootState } from "@/store";
-import { Check, LoaderCircle, PenLine, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Check, Ellipsis, LoaderCircle, PenLine, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TaskCreate from "./task-create";
 import { Button } from "./ui/button";
+import { setTaskFocus } from "@/features/sessionsSlice";
+import useOutsideClick from "@/hooks/use-outside-click";
 
 const TaskList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const tasks = useSelector((state: RootState) => state.tasks);
+  const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
   const tasksData = tasks.tasks;
   const [openEdit, setOpenEdit] = useState<Number | null>();
 
@@ -21,6 +24,12 @@ const TaskList = () => {
 
   return (
     <>
+      <div className="text-white text-lg flex items-center justify-between">
+        <p>Tasks</p>
+        <Button size={"iconsm"}>
+          <Ellipsis size={20} />
+        </Button>
+      </div>
       <ul className="my-5 space-y-4 relative">
         {/* <p className="text-xl border-b pb-4">Task</p> */}
         {tasks.status === "loading" && (
@@ -37,8 +46,14 @@ const TaskList = () => {
             />
           ) : (
             <li
-              className="flex items-center justify-between bg-slate-800 rounded-md py-3 px-5 cursor-pointer hover:bg-gray-700/60 transition"
+              className={cn(
+                "flex items-center justify-between bg-slate-800 rounded-md py-3 px-5 cursor-pointer hover:bg-gray-700/60 transition",
+                taskFocus === task.name ? "scale-95" : ""
+              )}
               key={task.id}
+              onClick={() => {
+                dispatch(setTaskFocus(task.name));
+              }}
             >
               <div className="flex items-center gap-3">
                 <span
@@ -63,13 +78,20 @@ const TaskList = () => {
                 </p>
               </div>
               <span className="flex items-center gap-3">
-                <Button size="iconsm" onClick={() => setOpenEdit(task.id)}>
+                <Button
+                  size="iconsm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenEdit(task.id);
+                  }}
+                >
                   <PenLine size={20} />
                 </Button>
                 <Button
                   size="iconsm"
                   variant="destructive"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     dispatch(deleteTask(task.id as number));
                   }}
                 >
