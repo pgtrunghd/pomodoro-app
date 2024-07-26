@@ -1,12 +1,10 @@
+import { sessionIncrease } from "@/features/sessionsSlice";
 import useCountDown from "@/hooks/use-count-down";
 import { cn, secondsToMinutesAndSeconds } from "@/lib/utils";
-import { Button } from "./ui/button";
-import CircleProgress from "./circle-progress";
-import { Progress } from "./ui/progress";
-import { useEffect } from "react";
 import { AppDispatch, RootState } from "@/store";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { sessionIncrease } from "@/features/sessionsSlice";
+import { Button } from "./ui/button";
 
 interface Props {
   setTab: any;

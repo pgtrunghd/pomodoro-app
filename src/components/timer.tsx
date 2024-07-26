@@ -1,8 +1,9 @@
-import { RootState } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TimerItem from "./timer-item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { sessionIncrease } from "@/features/sessionsSlice";
 
 const Timer = () => {
   const [tab, setTab] = useState("Pomodoro");
@@ -10,6 +11,7 @@ const Timer = () => {
   const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
   const pomodoroTime = useRef(5);
   const shortBreakTime = useRef(5);
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     <>
@@ -38,7 +40,22 @@ const Timer = () => {
       </div>
 
       <div className="text-center mt-4 mb-5 space-y-2">
-        <p>
+        <p
+          className="cursor-pointer hover:text-white/50 transition"
+          onClick={() => {
+            const result = confirm("You want to refresh session?");
+            if (result) {
+              dispatch(
+                sessionIncrease({
+                  pomodoro: 1,
+                  shortBreak: 1,
+                })
+              );
+            } else {
+              return;
+            }
+          }}
+        >
           Session{" "}
           {tab === "Pomodoro"
             ? sessions.session.pomodoro

@@ -43,6 +43,28 @@ export const deleteTask = createAsyncThunk(
   }
 );
 
+export const deleteTaskAll = createAsyncThunk(
+  "tasks/deleteTaskAll",
+  async () => {
+    const response = await axios.post(
+      "http://localhost:3000/tasks/delete-all"
+    );
+
+    return response.data;
+  }
+);
+
+export const deleteFinishedTasks = createAsyncThunk(
+  "tasks/deleteFinishedTasks",
+  async () => {
+    const response = await axios.post(
+      "http://localhost:3000/tasks/delete-finished"
+    );
+
+    return response.data;
+  }
+);
+
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async (task: Task) => {
@@ -92,9 +114,9 @@ const tasksSlice = createSlice({
       .addCase(deleteTask.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(deleteTask.fulfilled, (state, action) => {
+      .addCase(deleteTask.fulfilled, (state) => {
         state.status = "succeeded";
-        state.tasks = action.payload;
+        // state.tasks = action.payload;
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.status = "failed";
@@ -115,6 +137,34 @@ const tasksSlice = createSlice({
       .addCase(updateTask.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Failed to update task";
+      });
+
+    // Delete Task All
+    builder
+      .addCase(deleteTaskAll.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteTaskAll.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.tasks = [];
+      })
+      .addCase(deleteTaskAll.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Failed to delete all tasks";
+      });
+
+    // Delete Finished Tasks
+    builder
+      .addCase(deleteFinishedTasks.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteFinishedTasks.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.tasks = state.tasks.filter((task) => !task.isDone);
+      })
+      .addCase(deleteFinishedTasks.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Failed to delete finished tasks";
       });
   },
 });

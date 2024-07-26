@@ -5,12 +5,11 @@ import {
   Task,
   updateTask,
 } from "@/features/tasksSlice";
+import { cn } from "@/lib/utils";
 import { AppDispatch } from "@/store";
-import React from "react";
+import { Check, PenLine, Trash2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { Button } from "./ui/button";
-import { Check, PenLine, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface Props {
   task: Task;
@@ -63,9 +62,10 @@ const TaskItem = ({ task, taskFocus, setOpenEdit }: Props) => {
         <Button
           size="iconsm"
           variant="destructive"
-          onClick={(e) => {
+          onClick={async (e) => {
             e.stopPropagation();
-            dispatch(deleteTask(task.id as number));
+            await dispatch(deleteTask(task.id as number));
+            await dispatch(fetchTasks());
           }}
         >
           <Trash2 size={20} />

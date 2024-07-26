@@ -1,4 +1,10 @@
-import { deleteTask, fetchTasks, updateTask } from "@/features/tasksSlice";
+import {
+  deleteFinishedTasks,
+  deleteTask,
+  deleteTaskAll,
+  fetchTasks,
+  updateTask,
+} from "@/features/tasksSlice";
 import { cn } from "@/lib/utils";
 import { AppDispatch, RootState } from "@/store";
 import {
@@ -43,17 +49,17 @@ const TaskList = () => {
 
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger>
-            <Button size={"iconsm"}>
-              <EllipsisVertical className="size-4" />
+            <Button size={"iconsm"} variant={"ghost"}>
+              <Ellipsis className="size-4" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => dispatch(deleteFinishedTasks())}>
               <Trash2 className="mr-2 size-4" />
               <span>Clear finished tasks</span>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => dispatch(deleteTaskAll())}>
               <Trash2 className="mr-2 size-4" />
               <span>Clear all tasks</span>
             </DropdownMenuItem>
@@ -63,11 +69,11 @@ const TaskList = () => {
 
       <ul className="my-5 space-y-4 relative">
         {tasks.status === "loading" && (
-          <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/30 rounded-md flex items-center justify-center">
+          <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/30 rounded-md flex items-center justify-center z-10">
             <LoaderCircle className="text-white animate-spin" />
           </div>
         )}
-        {tasksData.map((task) =>
+        {tasksData?.map((task) =>
           openEdit === task.id ? (
             <TaskCreate
               task={task}

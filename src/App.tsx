@@ -15,7 +15,7 @@ function App() {
         <Timer />
 
         <TaskList />
-        
+
         {openCreate ? (
           <TaskCreate onClose={() => setOpenCreate(false)} />
         ) : (
