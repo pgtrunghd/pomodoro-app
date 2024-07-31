@@ -1,25 +1,32 @@
+import { sessionIncrease, setTab } from "@/features/sessionsSlice";
 import { AppDispatch, RootState } from "@/store";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TimerItem from "./timer-item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { sessionIncrease } from "@/features/sessionsSlice";
+import { cn } from "@/lib/utils";
 
 const Timer = () => {
-  const [tab, setTab] = useState("Pomodoro");
+  // const [tab, setTab] = useState("Pomodoro");
   const sessions = useSelector((state: RootState) => state.sessions);
   const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
   const pomodoroTime = useRef(5);
   const shortBreakTime = useRef(5);
   const dispatch = useDispatch<AppDispatch>();
+  const tab = useSelector((state: RootState) => state.sessions.tab);
 
   return (
     <>
-      <div className="bg-slate-800 rounded-md pt-5 pb-7 text-center">
+      <div
+        className={cn(
+          "rounded-md pt-5 pb-7 text-center transition",
+          tab === "Pomodoro" ? "bg-slate-800" : "bg-cyan-600"
+        )}
+      >
         <Tabs
           value={tab}
           onValueChange={(value) => {
-            setTab(value);
+            dispatch(setTab(value));
           }}
         >
           <TabsList>
@@ -27,14 +34,10 @@ const Timer = () => {
             <TabsTrigger value="Short Break">Short Break</TabsTrigger>
           </TabsList>
           <TabsContent value="Pomodoro">
-            <TimerItem setTab={setTab} tab={tab} time={pomodoroTime.current} />
+            <TimerItem tab={tab} time={pomodoroTime.current} />
           </TabsContent>
           <TabsContent value="Short Break">
-            <TimerItem
-              setTab={setTab}
-              tab={tab}
-              time={shortBreakTime.current}
-            />
+            <TimerItem tab={tab} time={shortBreakTime.current} />
           </TabsContent>
         </Tabs>
       </div>

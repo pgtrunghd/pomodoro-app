@@ -45,7 +45,7 @@ const TaskCreate = ({ onClose, task }: Props) => {
     if (task) {
       form.setValue("name", task.name);
     }
-  }, [task]);
+  }, [task, form]);
 
   return (
     <div className="bg-white p-5 rounded-md" ref={ref}>

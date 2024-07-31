@@ -6,6 +6,7 @@ export interface SessionState {
     shortBreak: number;
   };
   taskFocus: string;
+  tab: "Pomodoro" | "Short Break";
 }
 
 const initialState: SessionState = {
@@ -14,6 +15,7 @@ const initialState: SessionState = {
     shortBreak: 1,
   },
   taskFocus: "",
+  tab: "Pomodoro",
 };
 
 const sessionsSlice = createSlice({
@@ -26,8 +28,11 @@ const sessionsSlice = createSlice({
     setTaskFocus: (state, action) => {
       state.taskFocus = action.payload;
     },
+    setTab: (state, action) => {
+      state.tab = action.payload;
+    },
   },
 });
 
-export const { sessionIncrease, setTaskFocus } = sessionsSlice.actions;
+export const { sessionIncrease, setTaskFocus, setTab } = sessionsSlice.actions;
 export default sessionsSlice.reducer;

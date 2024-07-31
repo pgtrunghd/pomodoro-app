@@ -1,27 +1,15 @@
 import {
   deleteFinishedTasks,
-  deleteTask,
   deleteTaskAll,
   fetchTasks,
-  updateTask,
 } from "@/features/tasksSlice";
-import { cn } from "@/lib/utils";
 import { AppDispatch, RootState } from "@/store";
-import {
-  Check,
-  Ellipsis,
-  EllipsisVertical,
-  LoaderCircle,
-  PenLine,
-  Trash2,
-} from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Ellipsis, LoaderCircle, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TaskCreate from "./task-create";
-import { Button } from "./ui/button";
-import { setTaskFocus } from "@/features/sessionsSlice";
-import useOutsideClick from "@/hooks/use-outside-click";
 import TaskItem from "./task-item";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +22,7 @@ const TaskList = () => {
   const tasks = useSelector((state: RootState) => state.tasks);
   const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
   const tasksData = tasks.tasks;
-  const [openEdit, setOpenEdit] = useState<Number | null>();
+  const [openEdit, setOpenEdit] = useState<number | null>();
 
   useEffect(() => {
     if (tasks.status === "idle") {

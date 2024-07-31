@@ -1,26 +1,29 @@
-import { sessionIncrease } from "@/features/sessionsSlice";
+import { sessionIncrease, setTab } from "@/features/sessionsSlice";
 import useCountDown from "@/hooks/use-count-down";
 import { cn, secondsToMinutesAndSeconds } from "@/lib/utils";
 import { AppDispatch, RootState } from "@/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./ui/button";
+import useSound from "use-sound";
+import alarm from "@/assets/alarm.mp3";
 
 interface Props {
-  setTab: any;
   tab: string;
   time: number;
 }
 
-const TimerItem = ({ setTab, tab, time }: Props) => {
+const TimerItem = ({ tab, time }: Props) => {
   const { current, togglePause, isPaused, isOver } = useCountDown(0, time);
   const dispatch = useDispatch<AppDispatch>();
   const sessions = useSelector((state: RootState) => state.sessions);
+  const [play] = useSound(alarm);
 
   useEffect(() => {
     if (isOver) {
       if (tab === "Pomodoro") {
-        setTab("Short Break");
+        dispatch(setTab("Short Break"));
+        play();
         dispatch(
           sessionIncrease({
             ...sessions.session,
@@ -28,7 +31,8 @@ const TimerItem = ({ setTab, tab, time }: Props) => {
           })
         );
       } else {
-        setTab("Pomodoro");
+        dispatch(setTab("Pomodoro"));
+        play();
         dispatch(
           sessionIncrease({
             ...sessions.session,
@@ -46,8 +50,9 @@ const TimerItem = ({ setTab, tab, time }: Props) => {
       </h1>
 
       <Button
+        variant={"vintage"}
         className={cn(
-          "text-3xl uppercase h-fit w-[200px] shadow-[0_6px_0_0px] shadow-blue-700 active:translate-y-0 translate-y-[-6px] active:shadow-none mt-3",
+          "h-12",
           isPaused || isOver ? "" : "translate-y-0 shadow-none"
         )}
         onClick={togglePause}

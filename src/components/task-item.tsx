@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 interface Props {
   task: Task;
   taskFocus: string;
-  setOpenEdit: any;
+  setOpenEdit: React.Dispatch<React.SetStateAction<number | null | undefined>>;
 }
 
 const TaskItem = ({ task, taskFocus, setOpenEdit }: Props) => {
