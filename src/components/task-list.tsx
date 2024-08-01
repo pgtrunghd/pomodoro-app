@@ -30,6 +30,10 @@ const TaskList = () => {
     }
   }, []);
 
+  if (tasks.error) {
+    throw new Error(tasks.error);
+  }
+
   return (
     <>
       <div className="text-white text-lg flex items-center justify-between">

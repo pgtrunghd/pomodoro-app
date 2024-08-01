@@ -20,7 +20,7 @@ const initialState: TasksState = {
 };
 
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  const response = await axios.get("http://localhost:3000/tasks");
+  const response = await axios.get("http://localhost:3000/task");
 
   return response.data;
 });
@@ -46,9 +46,7 @@ export const deleteTask = createAsyncThunk(
 export const deleteTaskAll = createAsyncThunk(
   "tasks/deleteTaskAll",
   async () => {
-    const response = await axios.post(
-      "http://localhost:3000/tasks/delete-all"
-    );
+    const response = await axios.post("http://localhost:3000/tasks/delete-all");
 
     return response.data;
   }
