@@ -20,7 +20,7 @@ const initialState: TasksState = {
 };
 
 export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async () => {
-  const response = await axios.get("http://localhost:3000/task");
+  const response = await axios.get("http://localhost:3000/tasks");
 
   return response.data;
 });
