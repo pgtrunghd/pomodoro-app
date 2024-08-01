@@ -14,10 +14,17 @@ interface Props {
 }
 
 const TimerItem = ({ tab, time }: Props) => {
-  const { current, togglePause, isPaused, isOver } = useCountDown(0, time);
+  const { current, togglePause, isPaused, isOver, reset } = useCountDown(
+    0,
+    time
+  );
   const dispatch = useDispatch<AppDispatch>();
   const sessions = useSelector((state: RootState) => state.sessions);
   const [play] = useSound(alarm);
+
+  useEffect(() => {
+    reset();
+  }, [time]);
 
   useEffect(() => {
     if (isOver) {

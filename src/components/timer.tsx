@@ -1,19 +1,18 @@
 import { sessionIncrease, setTab } from "@/features/sessionsSlice";
+import { cn } from "@/lib/utils";
 import { AppDispatch, RootState } from "@/store";
-import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TimerItem from "./timer-item";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { cn } from "@/lib/utils";
 
 const Timer = () => {
-  // const [tab, setTab] = useState("Pomodoro");
+  const dispatch = useDispatch<AppDispatch>();
   const sessions = useSelector((state: RootState) => state.sessions);
   const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
-  const pomodoroTime = useRef(5);
-  const shortBreakTime = useRef(5);
-  const dispatch = useDispatch<AppDispatch>();
   const tab = useSelector((state: RootState) => state.sessions.tab);
+  const settings = useSelector((state: RootState) => state.settings);
+  const pomodoroTime = 60 * settings.pomodoroTime;
+  const shortBreakTime = 60 * settings.shortBreakTime;
 
   return (
     <>
@@ -34,10 +33,10 @@ const Timer = () => {
             <TabsTrigger value="Short Break">Short Break</TabsTrigger>
           </TabsList>
           <TabsContent value="Pomodoro">
-            <TimerItem tab={tab} time={pomodoroTime.current} />
+            <TimerItem tab={tab} time={pomodoroTime} />
           </TabsContent>
           <TabsContent value="Short Break">
-            <TimerItem tab={tab} time={shortBreakTime.current} />
+            <TimerItem tab={tab} time={shortBreakTime} />
           </TabsContent>
         </Tabs>
       </div>

@@ -9,6 +9,7 @@ import TaskList from "./components/task-list";
 import Timer from "./components/timer";
 import { cn } from "./lib/utils";
 import { RootState } from "./store";
+import Header from "./components/header";
 
 function App() {
   const [openCreate, setOpenCreate] = useState(false);
@@ -17,11 +18,13 @@ function App() {
   return (
     <main
       className={cn(
-        "min-h-screen py-10 transition-all",
+        "min-h-screen pb-10 transition-all",
         tab === "Pomodoro" ? "bg-slate-900" : "bg-cyan-500"
       )}
     >
       <section className="container max-w-screen-sm h-full">
+        <Header />
+
         <Timer />
 
         <ErrorBoundary>
