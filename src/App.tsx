@@ -22,7 +22,7 @@ function App() {
         tab === "Pomodoro" ? "bg-slate-900" : "bg-cyan-500"
       )}
     >
-      <section className="container max-w-screen-sm h-full">
+      <section className="container max-w-lg h-full">
         <Header />
 
         <Timer />

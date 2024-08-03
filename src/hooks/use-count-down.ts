@@ -1,4 +1,7 @@
+import { setCount, setPaused } from "@/features/countdownSlice";
+import { AppDispatch, RootState } from "@/store";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export interface Counter {
   current: number;
@@ -10,10 +13,25 @@ export interface Counter {
   togglePause: () => void;
 }
 
-const useCountDown = (min: number, max: number): Counter => {
-  const [count, setCount] = useState(max);
-  const [paused, setPaused] = useState(true);
+const useCountDown = (): Counter => {
+  const dispatch = useDispatch<AppDispatch>();
+  const tab = useSelector((state: RootState) => state.sessions.tab);
+  const { pomodoroTime, shortBreakTime } = useSelector(
+    (state: RootState) => state.settings
+  );
+  // const [count, setCount] = useState(
+  //   tab === "Pomodoro" ? pomodoroTime : shortBreakTime
+  // );
+  // const [paused, setPaused] = useState(true);
   const [isOver, setIsOver] = useState(false);
+  const count = useSelector((state: RootState) => state.countdown.count);
+  const paused = useSelector((state: RootState) => state.countdown.paused);
+  // const isOver = useSelector((state: RootState) => state.countdown.isOver);
+
+  useEffect(() => {
+    dispatch(setCount(tab === "Pomodoro" ? pomodoroTime : shortBreakTime));
+    dispatch(setPaused(true));
+  }, [pomodoroTime, shortBreakTime, tab, dispatch]);
 
   useEffect(() => {
     if (paused) {
@@ -21,17 +39,18 @@ const useCountDown = (min: number, max: number): Counter => {
     }
 
     const interval = setInterval(() => {
-      setCount((prev) => prev - 1);
+      // setCount((prev: number) => prev - 1);
+      dispatch(setCount(count - 1));
     }, 1000);
 
-    if (count <= min) {
+    if (count <= 0) {
       setIsOver(true);
       clearInterval(interval);
       return;
     }
 
     return () => clearInterval(interval);
-  }, [count, min, max, paused]);
+  }, [count, paused, dispatch]);
 
   return {
     current: count,
@@ -41,9 +60,9 @@ const useCountDown = (min: number, max: number): Counter => {
     play: () => setPaused(false),
     reset: () => {
       setIsOver(false);
-      setCount(max);
+      dispatch(setCount(tab === "Pomodoro" ? pomodoroTime : shortBreakTime));
     },
-    togglePause: () => setPaused(!paused),
+    togglePause: () => dispatch(setPaused(!paused)),
   };
 };
 

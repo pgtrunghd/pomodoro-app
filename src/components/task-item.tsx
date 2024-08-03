@@ -6,9 +6,9 @@ import {
   updateTask,
 } from "@/features/tasksSlice";
 import { cn } from "@/lib/utils";
-import { AppDispatch } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { Check, PenLine, Trash2 } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "./ui/button";
 
 interface Props {
@@ -19,12 +19,16 @@ interface Props {
 
 const TaskItem = ({ task, taskFocus, setOpenEdit }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
+  const tab = useSelector((state: RootState) => state.sessions.tab);
 
   return (
     <li
       className={cn(
-        "flex items-center justify-between bg-slate-800 rounded-md py-3 px-5 cursor-pointer hover:bg-gray-700/60 transition",
-        taskFocus === task.name ? "scale-95" : ""
+        "flex items-center justify-between rounded-md py-3 px-5 cursor-pointer  transition",
+        taskFocus === task.name ? "scale-95" : "",
+        tab === "Pomodoro"
+          ? "bg-slate-800 hover:bg-gray-800/60"
+          : "bg-cyan-600 hover:bg-cyan-600/60"
       )}
       key={task.id}
       onClick={() => {

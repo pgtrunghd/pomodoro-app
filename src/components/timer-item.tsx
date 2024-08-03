@@ -14,10 +14,7 @@ interface Props {
 }
 
 const TimerItem = ({ tab, time }: Props) => {
-  const { current, togglePause, isPaused, isOver, reset } = useCountDown(
-    0,
-    time
-  );
+  const { current, togglePause, isPaused, isOver, reset } = useCountDown();
   const dispatch = useDispatch<AppDispatch>();
   const sessions = useSelector((state: RootState) => state.sessions);
   const [play] = useSound(alarm);
@@ -52,7 +49,7 @@ const TimerItem = ({ tab, time }: Props) => {
 
   return (
     <>
-      <h1 className="text-[100px] font-semibold text-white">
+      <h1 className="text-[75px] sm:text-[100px] font-semibold text-white">
         {secondsToMinutesAndSeconds(current)}
       </h1>
 

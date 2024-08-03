@@ -49,8 +49,8 @@ const SettingModal = ({ onClose }: Props) => {
   };
 
   useEffect(() => {
-    form.setValue("pomodoroTime", settings.pomodoroTime);
-    form.setValue("shortBreakTime", settings.shortBreakTime);
+    form.setValue("pomodoroTime", settings.pomodoroTime / 60);
+    form.setValue("shortBreakTime", settings.shortBreakTime / 60);
     onClose();
   }, [settings, form]);
 

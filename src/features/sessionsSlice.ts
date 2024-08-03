@@ -29,6 +29,8 @@ const sessionsSlice = createSlice({
       state.taskFocus = action.payload;
     },
     setTab: (state, action) => {
+      console.log(action.payload);
+
       state.tab = action.payload;
     },
   },

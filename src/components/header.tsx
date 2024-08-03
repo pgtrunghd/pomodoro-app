@@ -6,14 +6,21 @@ import { Button } from "./ui/button";
 import { Dialog, DialogTrigger } from "./ui/dialog";
 import SettingModal from "./setting-modal";
 import { useState } from "react";
+import { Progress } from "./ui/progress";
+import useCountDown from "@/hooks/use-count-down";
 
 const Header = () => {
   const tab = useSelector((state: RootState) => state.sessions.tab);
+  const settings = useSelector((state: RootState) => state.settings);
   const [open, setOpen] = useState(false);
+  const time =
+    tab === "Pomodoro" ? settings.pomodoroTime : settings.shortBreakTime;
+  const { current } = useCountDown();
+  const progress = ((time - current) / time) * 100;
 
   return (
     <section className="py-4 mb-5">
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end mb-4">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
@@ -31,6 +38,7 @@ const Header = () => {
           <SettingModal onClose={() => setOpen(false)} />
         </Dialog>
       </div>
+      <Progress value={progress} />
     </section>
   );
 };

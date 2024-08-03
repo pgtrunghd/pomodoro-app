@@ -11,8 +11,8 @@ const Timer = () => {
   const taskFocus = useSelector((state: RootState) => state.sessions.taskFocus);
   const tab = useSelector((state: RootState) => state.sessions.tab);
   const settings = useSelector((state: RootState) => state.settings);
-  const pomodoroTime = 60 * settings.pomodoroTime;
-  const shortBreakTime = 60 * settings.shortBreakTime;
+  const pomodoroTime = settings.pomodoroTime;
+  const shortBreakTime = settings.shortBreakTime;
 
   return (
     <>

@@ -6,8 +6,8 @@ export interface State {
 }
 
 const initialState: State = {
-  pomodoroTime: 25,
-  shortBreakTime: 5,
+  pomodoroTime: 25 * 60,
+  shortBreakTime: 5 * 60,
 };
 
 const settingsSlice = createSlice({
@@ -15,10 +15,10 @@ const settingsSlice = createSlice({
   initialState,
   reducers: {
     setPomodoroTime: (state, action) => {
-      state.pomodoroTime = action.payload;
+      state.pomodoroTime = action.payload * 60;
     },
     setShortBreakTime: (state, action) => {
-      state.shortBreakTime = action.payload;
+      state.shortBreakTime = action.payload * 60;
     },
   },
 });
