@@ -1,7 +1,11 @@
-import { setPomodoroTime, setShortBreakTime } from "@/features/settingsSlice";
+import {
+  setPlayer,
+  setPomodoroTime,
+  setShortBreakTime,
+} from "@/features/settingsSlice";
 import { AppDispatch, RootState } from "@/store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Clock } from "lucide-react";
+import { AudioWaveform, Clock } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,14 +26,16 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 interface Props {
   onClose: () => void;
 }
 
 const formSchema = z.object({
-  pomodoroTime: z.any(),
-  shortBreakTime: z.any(),
+  pomodoroTime: z.number(),
+  shortBreakTime: z.number(),
+  player: z.string(),
 });
 
 const SettingModal = ({ onClose }: Props) => {
@@ -37,21 +43,29 @@ const SettingModal = ({ onClose }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      pomodoroTime: 0,
-      shortBreakTime: 0,
-    },
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     dispatch(setPomodoroTime(Number(values.pomodoroTime)));
     dispatch(setShortBreakTime(Number(values.shortBreakTime)));
+    dispatch(setPlayer(values.player));
+    localStorage.setItem(
+      "settings",
+      JSON.stringify({
+        pomodoroTime: values.pomodoroTime * 60,
+        shortBreakTime: values.shortBreakTime * 60,
+        player: values.player,
+      })
+    );
+    onClose();
   };
 
   useEffect(() => {
-    form.setValue("pomodoroTime", settings.pomodoroTime / 60);
-    form.setValue("shortBreakTime", settings.shortBreakTime / 60);
-    onClose();
+    form.reset({
+      pomodoroTime: settings.pomodoroTime / 60,
+      shortBreakTime: settings.shortBreakTime / 60,
+      player: settings.player,
+    });
   }, [settings, form]);
 
   return (
@@ -60,14 +74,13 @@ const SettingModal = ({ onClose }: Props) => {
         <DialogTitle>Setting</DialogTitle>
       </DialogHeader>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex items-center pt-4 mb-3">
-            <Clock className="mr-2 size-5" />
-            <span className="text-black m-0">Timer</span>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <div className="w-full space-y-1.5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className="space-y-2">
+            <FormLabel className="flex items-center">
+              <Clock className="mr-2 size-5" />
+              Timer
+            </FormLabel>
+            <div className="flex items-center gap-5">
               <FormField
                 control={form.control}
                 name="pomodoroTime"
@@ -75,14 +88,17 @@ const SettingModal = ({ onClose }: Props) => {
                   <FormItem>
                     <FormLabel>Pomodoro</FormLabel>
                     <FormControl>
-                      <Input type="number" min={0} {...field} />
+                      <Input
+                        {...field}
+                        type="number"
+                        min={0}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            <div className="w-full space-y-1.5">
               <FormField
                 control={form.control}
                 name="shortBreakTime"
@@ -90,12 +106,54 @@ const SettingModal = ({ onClose }: Props) => {
                   <FormItem>
                     <FormLabel>Short Break</FormLabel>
                     <FormControl>
-                      <Input type="number" min={0} {...field} />
+                      <Input
+                        {...field}
+                        type="number"
+                        min={0}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
+          </div>
+
+          <div className="h-px bg-accent-foreground w-full" />
+
+          <div className="space-y-3">
+            <FormLabel className="flex items-center">
+              <AudioWaveform className="mr-2 size-5" /> Music
+            </FormLabel>
+
+            <FormField
+              control={form.control}
+              name="player"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <RadioGroup
+                      defaultValue={field.value}
+                      onValueChange={field.onChange}
+                      className="flex items-center gap-5"
+                    >
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="youtube" />
+                        </FormControl>
+                        <FormLabel>Youtube</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="spotify" />
+                        </FormControl>
+                        <FormLabel>Spotify</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
 
           <DialogFooter className="mt-5">
