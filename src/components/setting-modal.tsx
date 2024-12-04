@@ -52,9 +52,9 @@ const SettingModal = ({ onClose }: Props) => {
     localStorage.setItem(
       "settings",
       JSON.stringify({
+        ...values,
         pomodoroTime: values.pomodoroTime * 60,
         shortBreakTime: values.shortBreakTime * 60,
-        player: values.player,
       })
     );
     onClose();
